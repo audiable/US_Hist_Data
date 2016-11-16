@@ -27,12 +27,12 @@ c <- b %>% mutate(Age=ifelse(AGE>=80,8,floor(AGE/10)))
 #assign labels to age 
 d <- c %>% mutate(Age=factor(Age,labels=agecats))
 
-#accounting for people of two races, or three or more race
+#filter for people of two races, or three or more race
 e <- d %>% filter(RACE == 8 | RACE == 9)
 
 
 
-#group by age and sex
+#group by age and sex and weight by PERWT
 #change male population to negatives to accomodate population pyramid structure 
 g <- e %>% group_by(Age,Sex) %>% summarise(Number=sum(PERWT))
 h2 <- g %>% mutate(Number=ifelse(Sex=='Male',-1 *Number,Number))
@@ -49,11 +49,11 @@ ggplot(data=h2,aes(x=Age,y=Number,fill=Sex)) +
   scale_y_continuous(breaks=c(-1000000,-750000,-500000,-250000,0,250000,500000,750000,1000000),
                      labels=c('1','.75','.5','.25','0','.25','.5','.75','1')) +
   
-  #format graph: set proper axes, title, stylization 
-  labs(y='Population in Millions',title='Population Pyramids for Mixed Race Americans in 2000') +
-  scale_fill_brewer(palette='Set1') +
-  guides(fill=guide_legend(title='Sex',title.position='top',reverse=TRUE)) +
-  theme_bw() + theme(legend.position='bottom') 
+#format graph: set proper axes, title, stylization 
+labs(y='Population in Millions',title='Population Pyramids for Mixed Race Americans in 2000') +
+scale_fill_brewer(palette='Set1') +
+guides(fill=guide_legend(title='Sex',title.position='top',reverse=TRUE)) +
+theme_bw() + theme(legend.position='bottom') 
 dev.off()
 
 
